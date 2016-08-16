@@ -21,9 +21,23 @@ node "tdp-jenkins.kainos.com" {
     ensure  => installed,
     require => Class['epel']
   }
+
   class { 'nginx': }
-  nginx::resource::vhost { '172.16.253.52':
-    www_root => '/var/www/yum/local',
+
+  nginx::resource::upstream {'jenkins':
+    members => ['127.0.0.1:8080'],
+  }
+
+  nginx::resource::vhost {'172.16.253.52':
+    proxy => '127.0.0.1:8080',
+    use_default_location => false,
+  }
+
+  nginx::resource::location{'local':
+    location  => '/yum',
+    vhost     => 'yum.mgmt.woa4pl',
+    www_root  => '/var/www/yum',
+    autoindex => 'on',
   }
 }
 
