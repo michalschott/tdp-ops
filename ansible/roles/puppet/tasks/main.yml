@@ -9,14 +9,14 @@
     - always
 
 - name: "Start puppet apply"
-  shell: sudo /opt/puppetlabs/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/default.pp --show_diff --detailed-exitcodes
+  shell: sudo /opt/puppetlabs/bin/puppet apply /etc/puppetlabs/code/environments/{{ env }}/manifests/default.pp --show_diff --detailed-exitcodes
   register: command_result
   changed_when: command_result.rc == 2
   failed_when: command_result.rc != 2 and command_result.rc != 0
   tags: apply
 
 - name: "Start puppet apply - noop"
-  shell: sudo /opt/puppetlabs/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/default.pp --show_diff --detailed-exitcodes --noop
+  shell: sudo /opt/puppetlabs/bin/puppet apply /etc/puppetlabs/code/environments/{{ env }}/manifests/default.pp --show_diff --detailed-exitcodes --noop
   register: command_result
   changed_when: command_result.rc == 2
   failed_when: command_result.rc != 2 and command_result.rc != 0
