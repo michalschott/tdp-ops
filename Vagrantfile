@@ -10,7 +10,7 @@ required_plugins.each do |plugin|
 end
 
 hosts = [
-  {name: 'prod', hostname: 'vm-rec-prod-app.kainos.com', ip: '10.10.10.10', environment: 'production', cpu: '2', mem: '4096', port_forward: [{guest: 80, host: 8080}, {guest: 8888, host: 8888}, {guest: 5432, host: 5432}]},
+  {name: 'prod', hostname: 'vm-rec-prod-app.kainos.com', ip: '10.100.1.11', environment: 'production', cpu: '2', mem: '4096', port_forward: [{guest: 80, host: 8080}, {guest: 8888, host: 8888}, {guest: 5432, host: 5432}]},
   ]
 
 Vagrant.configure("2") do |config|
