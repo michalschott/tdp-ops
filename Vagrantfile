@@ -23,6 +23,7 @@ Vagrant.configure("2") do |config|
     config.vm.define host[:name] do |vm_config|
       vm_config.vm.hostname = host[:hostname]
       vm_config.vm.network :private_network, ip: host[:ip]
+      vm_config.vm.synced_folder "puppet/modules/", "/etc/puppetlabs/code/modules"
       vm_config.vm.provider "virtualbox" do |vbox|
         vbox.name = "#{vm_config.vm.hostname}"
         vbox.customize ["modifyvm", :id, "--memory", "#{host[:mem]}"]

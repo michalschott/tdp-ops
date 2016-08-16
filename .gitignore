@@ -1,2 +1,5 @@
 vendor/
-puppet/environments/*/modules/
+puppet/modules/
+*.lock
+.vagrant
+.tmp

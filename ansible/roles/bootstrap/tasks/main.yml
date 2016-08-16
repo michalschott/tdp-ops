@@ -1,0 +1,23 @@
+---
+
+- name: Configure puppet repository
+  yum:
+    name: http://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
+    state: present
+
+- name: Add TDP repository
+  yum_repository:
+    name: TDP
+    description: TDP YUM repo
+    baseurl: '{{ tdp_repo_url }}'
+
+- name: Install puppet
+  yum:
+    name: puppet-4.5.3
+    state: present
+    update_cache: yes
+
+- name: Install tdp-puppet
+  yum:
+    name: tdp-puppet
+    state: latest
