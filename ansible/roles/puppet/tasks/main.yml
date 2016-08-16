@@ -1,0 +1,28 @@
+- name: "Make cache"
+  command: sudo /bin/yum makecache
+  tags:
+    - always
+
+- name: "Install latest puppet rpm"
+  command: sudo /bin/yum install tdp-puppet-{{ env }} -y
+  tags:
+    - always
+
+- name: "Start puppet apply"
+  shell: sudo /opt/puppetlabs/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/default.pp --show_diff --detailed-exitcodes
+  register: command_result
+  changed_when: command_result.rc == 2
+  failed_when: command_result.rc != 2 and command_result.rc != 0
+  tags: apply
+
+- name: "Start puppet apply - noop"
+  shell: sudo /opt/puppetlabs/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/default.pp --show_diff --detailed-exitcodes --noop
+  register: command_result
+  changed_when: command_result.rc == 2
+  failed_when: command_result.rc != 2 and command_result.rc != 0
+  tags: noop
+
+- name: "puppet apply output"
+  debug: var=command_result.stdout_lines
+  tags:
+    - always
