@@ -1,5 +1,5 @@
 ---
-- hosts: all:!excluded
+- hosts: vm-rec-prod-app.kainos.com
   gather_facts: false
   remote_user: root
   roles:
