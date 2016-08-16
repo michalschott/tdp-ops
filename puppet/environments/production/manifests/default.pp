@@ -1,7 +1,10 @@
 node "vm-rec-prod-app.kainos.com" {
 }
 
-node "tdp-jenkins.kainos.com" {  include epel
+node "tdp-jenkins.kainos.com" {
+  include epel
+  include nginx
+
   $dependencies = [ 'git', 'rubygems', 'gcc', 'ruby-devel', 'rpm-build']
   $dependencies.each |$dependency| {
     package {$dependency:
@@ -23,8 +26,6 @@ node "tdp-jenkins.kainos.com" {  include epel
   class {'yum_repo':
     require => Class['nginx'],
   }
-
-  class {'nginx': }
 
   nginx::resource::upstream {'jenkins':
     members => ['127.0.0.1:8080'],
@@ -49,6 +50,11 @@ node "tdp-jenkins.kainos.com" {  include epel
     www_root  => '/var/www/',
     autoindex => 'on',
   }
+
+  if ($::selinux) {
+    selboolean {'httpd_can_network_connect':
+      persistent => true,
+      value      => 'on',
+    }
+  }
 }
-
-
