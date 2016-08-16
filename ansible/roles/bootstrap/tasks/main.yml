@@ -13,7 +13,7 @@
 
 - name: Install puppet
   yum:
-    name: puppet-4.5.3
+    name: puppet-agent-1.6.0
     state: present
     update_cache: yes
 
