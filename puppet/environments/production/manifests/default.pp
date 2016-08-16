@@ -1,9 +1,7 @@
 node "vm-rec-prod-app.kainos.com" {
 }
 
-node "tdp-jenkins.kainos.com" {
-  include epel, yum_repo
-
+node "tdp-jenkins.kainos.com" {  include epel
   $dependencies = [ 'git', 'rubygems', 'gcc', 'ruby-devel', 'rpm-build']
   $dependencies.each |$dependency| {
     package {$dependency:
@@ -22,21 +20,33 @@ node "tdp-jenkins.kainos.com" {
     require => Class['epel']
   }
 
-  class { 'nginx': }
+  class {'yum_repo':
+    require => Class['nginx'],
+  }
+
+  class {'nginx': }
 
   nginx::resource::upstream {'jenkins':
     members => ['127.0.0.1:8080'],
   }
 
   nginx::resource::vhost {'172.16.253.52':
-    proxy => '127.0.0.1:8080',
     use_default_location => false,
   }
 
-  nginx::resource::location{'local':
+  nginx::resource::location {'jenkins':
+    location              => '/',
+    vhost                 => '172.16.253.52',
+    proxy                 => 'http://jenkins',
+    proxy_connect_timeout => '10s',
+    proxy_read_timeout    => '10s',
+    proxy_set_header      => ['Host $host:$server_port', 'X-Real-IP $remote_addr', 'X-Forwarded-For $proxy_add_x_forwarded_for', 'X-Forwarded-Proto $scheme'],
+  }
+
+  nginx::resource::location {'local':
     location  => '/yum',
-    vhost     => 'yum.mgmt.woa4pl',
-    www_root  => '/var/www/yum',
+    vhost     => '172.16.253.52',
+    www_root  => '/var/www/',
     autoindex => 'on',
   }
 }
