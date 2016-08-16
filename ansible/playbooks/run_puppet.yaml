@@ -1,0 +1,6 @@
+---
+- hosts: all:!excluded
+  gather_facts: false
+  remote_user: root
+  roles:
+    - puppet
