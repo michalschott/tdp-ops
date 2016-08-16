@@ -1,0 +1,2 @@
+vendor/
+puppet/environments/*/modules/
