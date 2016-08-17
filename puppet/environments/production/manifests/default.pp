@@ -29,6 +29,21 @@ node "vm-rec-prod-app.kainos.com" {
     proxy_set_header => ['Host $host:$server_port', 'X-Real-IP $remote_addr', 'X-Forwarded-For $proxy_add_x_forwarded_for', 'X-Forwarded-Proto $scheme'],
 
   }
+<<<<<<< HEAD
+=======
+
+  if ($::selinux) {
+    selboolean {'httpd_can_network_connect':
+      persistent => true,
+      value      => 'on',
+    }
+  }
+  service { 'firewalld':
+    ensure => stopped,
+    enable => mask,
+  }
+}
+>>>>>>> master
 
 node "tdp-jenkins.kainos.com" {
   include epel
