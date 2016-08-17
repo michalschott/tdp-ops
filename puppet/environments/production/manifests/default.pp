@@ -28,12 +28,12 @@ node "tdp-jenkins.kainos.com" {
   }
 
   class { 'postgresql::server':
-    postgres_password          => 'aaa',
+    postgres_password          => 'tdp',
   }
 
-  postgresql::server::db { 'baza':
-     user     => 'user_baza',
-     password => postgresql_password('user_baza', 'aaa'),
+  postgresql::server::db { 'tdprecruitment':
+     user     => 'tdp',
+     password => postgresql_password('tdp', 'tdp'),
   }
 
   nginx::resource::upstream {'jenkins':
