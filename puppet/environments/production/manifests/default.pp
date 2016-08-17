@@ -65,14 +65,17 @@ node "vm-rec-prod-app.kainos.com" {
     proto  => 'all',
     action => 'drop',
   }
-  firewall_multi { '500 allow http and ssh access':
-    source => [
-      '0.0.0.0/0',
-    ],
-    dport  => [22, 80],
-    proto  => tcp,
-    action => accept,
+  firewall { '050 accept SSH traffic':
+    proto  => 'all',
+    dport  => 22,
+    action => 'accept',
   }
+  firewall { '051 accept HTTP traffic':
+    proto  => 'all',
+    dport  => 22,
+    action => 'accept',
+  }
+
 
 node "tdp-jenkins.kainos.com" {
   include epel
