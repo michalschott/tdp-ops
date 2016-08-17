@@ -7,7 +7,6 @@
   command: sudo /bin/yum install tdp-puppet -y
   tags:
     - always
-  disable_gpg_check: yes
 
 - name: "Start puppet apply"
   shell: sudo /opt/puppetlabs/bin/puppet apply /etc/puppetlabs/code/environments/production/manifests/default.pp --show_diff --detailed-exitcodes
