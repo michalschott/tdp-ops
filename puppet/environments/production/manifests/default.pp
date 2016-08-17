@@ -38,7 +38,7 @@ node "vm-rec-prod-app.kainos.com" {
       value      => 'on',
     }
   }
-}
+
   resources { 'firewall':
     purge => true,
   }
@@ -84,7 +84,7 @@ node "vm-rec-prod-app.kainos.com" {
     dport  => 80,
     action => 'accept',
   }
-
+}
 
 node "tdp-jenkins.kainos.com" {
   include epel
