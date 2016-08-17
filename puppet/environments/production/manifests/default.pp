@@ -29,8 +29,6 @@ node "vm-rec-prod-app.kainos.com" {
     proxy_set_header => ['Host $host:$server_port', 'X-Real-IP $remote_addr', 'X-Forwarded-For $proxy_add_x_forwarded_for', 'X-Forwarded-Proto $scheme'],
 
   }
-<<<<<<< HEAD
-=======
 
   if ($::selinux) {
     selboolean {'httpd_can_network_connect':
@@ -38,12 +36,53 @@ node "vm-rec-prod-app.kainos.com" {
       value      => 'on',
     }
   }
-  service { 'firewalld':
-    ensure => stopped,
-    enable => mask,
-  }
 }
->>>>>>> master
+  resources { 'firewall':
+    purge => true,
+  }
+  firewall { '000 accept all icmp':
+    proto  => 'icmp',
+    action => 'accept',
+  }
+  firewall { '001 accept all to lo interface':
+    proto   => 'all',
+    iniface => 'lo',
+    action  => 'accept',
+  }
+  firewall { '002 reject local traffic not on loopback interface':
+    iniface     => '! lo',
+    proto       => 'all',
+    destination => '127.0.0.1/8',
+    action      => 'reject',
+  }
+  firewall { '003 accept related established rules':
+    proto  => 'all',
+    state  => ['RELATED', 'ESTABLISHED'],
+    action => 'accept',
+  }
+  if $::virtual == 'virtualbox' {
+  notice('Detected vagarnt instance - opening All trafic')
+    firewall { '998 allow all trafic for vagrant':
+      proto  => 'all',
+      action => 'accept',
+      source => '0.0.0.0/0',
+    }
+  }
+  firewall { '999 drop all':
+    proto  => 'all',
+    action => 'drop',
+  }
+  firewall { '050 accept SSH traffic':
+    proto  => 'tcp',
+    dport  => 22,
+    action => 'accept',
+  }
+  firewall { '051 accept HTTP traffic':
+    proto  => 'tcp',
+    dport  => 22,
+    action => 'accept',
+  }
+
 
 node "tdp-jenkins.kainos.com" {
   include epel
