@@ -1,4 +1,17 @@
 node "vm-rec-prod-app.kainos.com" {
+
+  class { 'postgresql::globals':
+    version             => '9.5',
+  }
+  class { 'postgresql::server':
+    listen_addresses  => 'localhost',
+    require           => Class['postgresql::globals'],
+  }
+
+  postgresql::server::db { 'tdprecruitment':
+     user     => 'tdp',
+     password => postgresql_password('tdp', 'tdp'),
+  }
 }
 
 node "tdp-jenkins.kainos.com" {
