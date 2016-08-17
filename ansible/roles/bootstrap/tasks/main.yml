@@ -10,6 +10,7 @@
     name: TDP
     description: TDP YUM repo
     baseurl: '{{ tdp_repo_url }}'
+    gpgcheck: no
 
 - name: Install puppet
   yum:
