@@ -1,0 +1,12 @@
+[Unit]
+Description=Java Service
+
+[Service]
+User=nobody
+# The configuration file application.properties should be here:
+WorkingDirectory=/etc/tdp-recruitment/app_config.yml
+ExecStart=/usr/bin/java -Xmx256m -jar application.jar
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

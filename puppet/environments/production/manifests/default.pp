@@ -13,6 +13,7 @@ node "vm-rec-prod-app.kainos.com" {
      user     => 'tdp',
      password => postgresql_password('tdp', 'tdp'),
   }
+  class { 'tdp_app': }
 }
 
 node "tdp-jenkins.kainos.com" {
