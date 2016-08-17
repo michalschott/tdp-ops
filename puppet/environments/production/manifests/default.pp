@@ -28,6 +28,13 @@ node "vm-rec-prod-app.kainos.com" {
     proxy_set_header => ['Host $host:$server_port', 'X-Real-IP $remote_addr', 'X-Forwarded-For $proxy_add_x_forwarded_for', 'X-Forwarded-Proto $scheme'],
 
   }
+
+  if ($::selinux) {
+    selboolean {'httpd_can_network_connect':
+      persistent => true,
+      value      => 'on',
+    }
+  }
 }
 
 node "tdp-jenkins.kainos.com" {
