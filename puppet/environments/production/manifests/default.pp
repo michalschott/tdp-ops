@@ -1,6 +1,7 @@
 node "vm-rec-prod-app.kainos.com" {
 
   include nginx
+  include firewall
 
   class { 'postgresql::globals':
     manage_package_repo => true,
@@ -28,11 +29,55 @@ node "vm-rec-prod-app.kainos.com" {
     proxy_set_header => ['Host $host:$server_port', 'X-Real-IP $remote_addr', 'X-Forwarded-For $proxy_add_x_forwarded_for', 'X-Forwarded-Proto $scheme'],
 
   }
+  resources { 'firewall':
+    purge => true,
+  }
+  firewall { '000 accept all icmp':
+    proto  => 'icmp',
+    action => 'accept',
+  }
+  firewall { '001 accept all to lo interface':
+    proto   => 'all',
+    iniface => 'lo',
+    action  => 'accept',
+  }
+  firewall { '002 reject local traffic not on loopback interface':
+    iniface     => '! lo',
+    proto       => 'all',
+    destination => '127.0.0.1/8',
+    action      => 'reject',
+  }
+  firewall { '003 accept related established rules':
+    proto  => 'all',
+    state  => ['RELATED', 'ESTABLISHED'],
+    action => 'accept',
+  }
 }
+  if $::virtual == 'virtualbox' {
+  notice('Detected vagarnt instance - opening All trafic')
+    firewall { '998 allow all trafic for vagrant':
+      proto  => 'all',
+      action => 'accept',
+      source => '0.0.0.0/0',
+    }
+  }
+  firewall { '999 drop all':
+    proto  => 'all',
+    action => 'drop',
+  }
+  firewall_multi { '500 allow http and ssh access':
+    source => [
+      '0.0.0.0/0',
+    ],
+    dport  => [22, 80],
+    proto  => tcp,
+    action => accept,
+  }
 
 node "tdp-jenkins.kainos.com" {
   include epel
   include nginx
+
 
   $dependencies = [ 'git', 'rubygems', 'gcc', 'ruby-devel', 'rpm-build']
   $dependencies.each |$dependency| {
@@ -78,59 +123,6 @@ node "tdp-jenkins.kainos.com" {
     vhost     => '172.16.253.52',
     www_root  => '/var/www/',
     autoindex => 'on',
-  }
-
-include firewall
-  class tdp::pre {
-    Firewall {
-      require => undef,
-    }
-    firewall { '000 accept all icmp':
-      proto  => 'icmp',
-      action => 'accept',
-    }
-    firewall { '001 accept all to lo interface':
-      proto   => 'all',
-      iniface => 'lo',
-      action  => 'accept',
-    }
-    firewall { '002 reject local traffic not on loopback interface':
-      iniface     => '! lo',
-      proto       => 'all',
-      destination => '127.0.0.1/8',
-      action      => 'reject',
-    }
-    firewall { '003 accept related established rules':
-      proto  => 'all',
-      state  => ['RELATED', 'ESTABLISHED'],
-      action => 'accept',
-    }
-  }
-  class tdp::post {
-    if $::virtual == 'virtualbox' {
-      notice('Detected vagarnt instance - opening All trafic')
-      firewall { '998 allow all trafic for vagrant':
-        proto  => 'all',
-        action => 'accept',
-        source => '0.0.0.0/0',
-      }
-    }
-    firewall { '999 drop all':
-      proto  => 'all',
-      action => 'drop',
-    }
-  }
-  firewall_multi { '100 allow http and https access':
-    source => [
-      '127.0.0.1',
-      '10.0.0.0/8',
-      '10.1.1.128',
-      '91.222.71.98',
-      '193.195.13.5',
-    ],
-    dport  => [80, 443],
-    proto  => tcp,
-    action => accept,
   }
 
   if ($::selinux) {
