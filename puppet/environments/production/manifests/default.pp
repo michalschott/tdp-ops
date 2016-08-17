@@ -27,6 +27,15 @@ node "tdp-jenkins.kainos.com" {
     require => Class['nginx'],
   }
 
+  class { 'postgresql::server':
+    postgres_password          => 'aaa',
+  }
+
+  postgresql::server::db { 'baza':
+     user     => 'user_baza',
+     password => postgresql_password('user_baza', 'aaa'),
+  }
+
   nginx::resource::upstream {'jenkins':
     members => ['127.0.0.1:8080'],
   }
