@@ -3,3 +3,4 @@ puppet/modules/
 *.lock
 .vagrant
 .tmp
+target/
