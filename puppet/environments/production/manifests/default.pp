@@ -97,8 +97,4 @@ node "tdp-jenkins.kainos.com" {
       value      => 'on',
     }
   }
-  service { 'firewalld':
-    ensure => stopped,
-    enable => mask,
-  }
 }
