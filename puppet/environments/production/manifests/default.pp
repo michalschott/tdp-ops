@@ -18,6 +18,8 @@ node "vm-rec-prod-app.kainos.com" {
      password => postgresql_password('tdp', 'tdp'),
   }
 
+  class { 'tdp_app': }
+
   nginx::resource::upstream { 'rec':
     members => [
       'localhost:8888',

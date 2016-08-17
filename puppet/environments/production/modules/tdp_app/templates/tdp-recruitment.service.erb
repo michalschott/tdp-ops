@@ -1,0 +1,11 @@
+[Unit]
+Description=Java Service
+
+[Service]
+User=root
+# The configuration file application.properties should be here:
+ExecStart=/usr/bin/java -jar /opt/tdp-recruitment/tdp-recruitment-1.0-SNAPSHOT.jar server /etc/tdp-recruitment/app_config.yml
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
