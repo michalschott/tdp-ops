@@ -79,7 +79,7 @@ node "vm-rec-prod-app.kainos.com" {
   }
   firewall { '051 accept HTTP traffic':
     proto  => 'tcp',
-    dport  => 22,
+    dport  => 80,
     action => 'accept',
   }
 
