@@ -1,4 +1,7 @@
 node "vm-rec-prod-app.kainos.com" {
+
+  include nginx
+
   class { 'postgresql::globals':
     manage_package_repo => true,
     version             => '9.5',
@@ -13,7 +16,31 @@ node "vm-rec-prod-app.kainos.com" {
      user     => 'tdp',
      password => postgresql_password('tdp', 'tdp'),
   }
+
   class { 'tdp_app': }
+
+  nginx::resource::upstream { 'rec':
+    members => [
+      'localhost:8888',
+    ],
+  }
+
+  nginx::resource::vhost { 'recruitment-helper.kainos.com':
+    proxy            => 'http://rec',
+    proxy_set_header => ['Host $host:$server_port', 'X-Real-IP $remote_addr', 'X-Forwarded-For $proxy_add_x_forwarded_for', 'X-Forwarded-Proto $scheme'],
+
+  }
+
+  if ($::selinux) {
+    selboolean {'httpd_can_network_connect':
+      persistent => true,
+      value      => 'on',
+    }
+  }
+  service { 'firewalld':
+    ensure => stopped,
+    enable => mask,
+  }
 }
 
 node "tdp-jenkins.kainos.com" {
