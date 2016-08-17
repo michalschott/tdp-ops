@@ -85,29 +85,27 @@ include firewall
     Firewall {
       require => undef,
     }
-     # Default firewall rules
     firewall { '000 accept all icmp':
       proto  => 'icmp',
       action => 'accept',
-    }->
+    }
     firewall { '001 accept all to lo interface':
       proto   => 'all',
       iniface => 'lo',
       action  => 'accept',
-    }->
+    }
     firewall { '002 reject local traffic not on loopback interface':
       iniface     => '! lo',
       proto       => 'all',
       destination => '127.0.0.1/8',
       action      => 'reject',
-    }->
+    }
     firewall { '003 accept related established rules':
       proto  => 'all',
       state  => ['RELATED', 'ESTABLISHED'],
       action => 'accept',
     }
   }
-
   class tdp::post {
     if $::virtual == 'virtualbox' {
       notice('Detected vagarnt instance - opening All trafic')
@@ -122,7 +120,6 @@ include firewall
       action => 'drop',
     }
   }
-
   firewall_multi { '100 allow http and https access':
     source => [
       '127.0.0.1',
