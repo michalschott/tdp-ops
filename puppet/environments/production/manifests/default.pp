@@ -80,6 +80,62 @@ node "tdp-jenkins.kainos.com" {
     autoindex => 'on',
   }
 
+include firewall
+  class tdp::pre {
+    Firewall {
+      require => undef,
+    }
+     # Default firewall rules
+    firewall { '000 accept all icmp':
+      proto  => 'icmp',
+      action => 'accept',
+    }->
+    firewall { '001 accept all to lo interface':
+      proto   => 'all',
+      iniface => 'lo',
+      action  => 'accept',
+    }->
+    firewall { '002 reject local traffic not on loopback interface':
+      iniface     => '! lo',
+      proto       => 'all',
+      destination => '127.0.0.1/8',
+      action      => 'reject',
+    }->
+    firewall { '003 accept related established rules':
+      proto  => 'all',
+      state  => ['RELATED', 'ESTABLISHED'],
+      action => 'accept',
+    }
+  }
+
+  class tdp::post {
+    if $::virtual == 'virtualbox' {
+      notice('Detected vagarnt instance - opening All trafic')
+      firewall { '998 allow all trafic for vagrant':
+        proto  => 'all',
+        action => 'accept',
+        source => '0.0.0.0/0',
+      }
+    }
+    firewall { '999 drop all':
+      proto  => 'all',
+      action => 'drop',
+    }
+  }
+
+  firewall_multi { '100 allow http and https access':
+    source => [
+      '127.0.0.1',
+      '10.0.0.0/8',
+      '10.1.1.128',
+      '91.222.71.98',
+      '193.195.13.5',
+    ],
+    dport  => [80, 443],
+    proto  => tcp,
+    action => accept,
+  }
+
   if ($::selinux) {
     selboolean {'httpd_can_network_connect':
       persistent => true,
