@@ -4,8 +4,7 @@ Description=Java Service
 [Service]
 User=root
 # The configuration file application.properties should be here:
-WorkingDirectory=/etc/tdp-recruitment/app_config.yml
-ExecStart=/usr/bin/java -Xmx256m -jar /opt/tdp-recruitment/tdp-recruitment-1.0-SNAPSHOT.jar server
+ExecStart=/usr/bin/java -jar /opt/tdp-recruitment/tdp-recruitment-1.0-SNAPSHOT.jar server /etc/tdp-recruitment/app_config.yml
 SuccessExitStatus=143
 
 [Install]

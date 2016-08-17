@@ -9,9 +9,9 @@ class tdp_app (
   }
   file { '/etc/tdp-recruitment':
     ensure => 'directory',
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
     before => File['/etc/tdp-recruitment/app_config.yml'],
   }
   file { '/etc/tdp-recruitment/app_config.yml':
@@ -38,7 +38,7 @@ class tdp_app (
     require => File['/etc/systemd/system/tdp-recruitment.service'],
   }
   exec { 'Refresh system daemon':
-    command      => '/usr/bin/systemctl daemon-reload',
+    command     => '/usr/bin/systemctl daemon-reload',
     refreshonly => true,
   }
 }
