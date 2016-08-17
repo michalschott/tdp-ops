@@ -1,4 +1,16 @@
 node "vm-rec-prod-app.kainos.com" {
+
+  class { 'postgresql::globals':
+    version             => '9.5',
+  }->
+  class { 'postgresql::server':
+    postgres_password => 'tdp',
+  }
+
+  postgresql::server::db { 'tdprecruitment':
+     user     => 'tdp',
+     password => postgresql_password('tdp', 'tdp'),
+  }
 }
 
 node "tdp-jenkins.kainos.com" {
@@ -25,15 +37,6 @@ node "tdp-jenkins.kainos.com" {
 
   class {'yum_repo':
     require => Class['nginx'],
-  }
-
-  class { 'postgresql::server':
-    postgres_password          => 'tdp',
-  }
-
-  postgresql::server::db { 'tdprecruitment':
-     user     => 'tdp',
-     password => postgresql_password('tdp', 'tdp'),
   }
 
   nginx::resource::upstream {'jenkins':
