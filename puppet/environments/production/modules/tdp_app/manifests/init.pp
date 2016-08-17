@@ -30,15 +30,15 @@ class tdp_app (
     mode    => '0644',
     content => template("${module_name}/tdp-recruitment.service.erb"),
     require => Package['tdp-recruitment'],
+    notify  => Exec['Refresh system daemon'],
   }
   service { 'tdp-recruitment':
     ensure  => running,
     enable  => true,
     require => File['/etc/systemd/system/tdp-recruitment.service'],
-    notify  => Exec['Refresh system daemon'],
   }
   exec { 'Refresh system daemon':
-    command      => 'systemctl daemon-reload',
+    command      => '/usr/bin/systemctl daemon-reload',
     refreshonly => true,
   }
 }
