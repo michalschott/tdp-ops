@@ -35,6 +35,10 @@ node "vm-rec-prod-app.kainos.com" {
       value      => 'on',
     }
   }
+  service { 'firewalld':
+    ensure => stopped,
+    enable => mask,
+  }
 }
 
 node "tdp-jenkins.kainos.com" {
@@ -92,5 +96,9 @@ node "tdp-jenkins.kainos.com" {
       persistent => true,
       value      => 'on',
     }
+  }
+  service { 'firewalld':
+    ensure => stopped,
+    enable => mask,
   }
 }
