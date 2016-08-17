@@ -21,3 +21,4 @@
   yum:
     name: tdp-puppet
     state: latest
+    disable_gpg_check: yes

@@ -1,10 +1,12 @@
 node "vm-rec-prod-app.kainos.com" {
 
   include nginx
+
   class { 'postgresql::globals':
     manage_package_repo => true,
     version             => '9.5',
   }
+
   class { 'postgresql::server':
     listen_addresses  => 'localhost',
     require           => Class['postgresql::globals'],
