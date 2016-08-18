@@ -1,4 +1,13 @@
 class tdp_app (
+  $dbuser    = 'tdp',
+  $dbpass    = 'tdp',
+  $dbname    = 'tdprecruitment',
+  $dbhost    = 'localhost',
+  $port      = 8888,
+  $adminport = 8889,
+  $mailhost  = 'localhost',
+  $mailport  = 25,
+  $mailfrom  = 'no-reply@localhost',
   ) {
   package { 'java-1.8.0-openjdk':
     ensure => latest,
@@ -28,7 +37,7 @@ class tdp_app (
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => template("${module_name}/tdp-recruitment.service.erb"),
+    source  => "puppet:///modules/${module_name}/tdp-recruitment.service",
     require => Package['tdp-recruitment'],
     notify  => Exec['Refresh system daemon'],
   }
