@@ -15,6 +15,7 @@ class tdp_app (
   package { 'tdp-recruitment':
     require => Package['java-1.8.0-openjdk'],
     ensure  => latest,
+    notify  => [Service['tdp-recruitment'], Exec['Run TDP migrations']],
   }
   file { '/etc/tdp-recruitment':
     ensure => 'directory',
@@ -49,5 +50,9 @@ class tdp_app (
   exec { 'Refresh system daemon':
     command     => '/usr/bin/systemctl daemon-reload',
     refreshonly => true,
+  }
+  exec { 'Run TDP migrations':
+    command => '/usr/bin/java -jar /opt/tdp-recruitment/tdp-recruitment-1.0-SNAPSHOT.jar db migrate /etc/tdp-recruitment/app_config.yml',
+    before  => Service['tdp-recruitment'],
   }
 }
