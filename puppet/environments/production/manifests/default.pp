@@ -18,7 +18,10 @@ node "vm-rec-prod-app.kainos.com" {
      password => postgresql_password('tdp', 'tdp'),
   }
 
-  class { 'tdp_app': }
+  class { 'tdp_app':
+    mailhost => 'mail.kainos.com',
+    mailfrom => 'no-reply@kainos.com',
+  }
 
   nginx::resource::upstream { 'rec':
     members => [

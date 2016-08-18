@@ -3,22 +3,22 @@ server:
   applicationContextPath: /
   applicationConnectors:
     - type: http
-      port: 8888
+      port: <%= @port %>
   adminConnectors:
     - type: http
-      port: 8889
+      port: <%= @adminport %>
 database:
   # the name of your JDBC driver
   driverClass: org.postgresql.Driver
 
   # the username
-  user: tdp
+  user: <%= @dbuser %>
 
   # the password
-  password: tdp
+  password: <%= @dbpass %>
 
   # the JDBC URL
-  url: jdbc:postgresql://localhost/tdprecruitment
+  url: jdbc:postgresql://<%= @dbhost %>/<%= @dbname %>
 
   # any properties specific to your JDBC driver:
   properties:
@@ -43,8 +43,8 @@ database:
   checkConnectionWhileIdle: false
 
 smtpConfig:
-  host: mail.kainos.com
-  port: 25
-  from: no-reply@kainos.com
+  host: <%= @mailhost %>
+  port: <%= @mailport %>
+  from: <%= @mailfrom %>
 
 domain: http://localhost:8888
