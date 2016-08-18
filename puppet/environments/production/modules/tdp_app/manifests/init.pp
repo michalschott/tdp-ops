@@ -40,7 +40,7 @@ class tdp_app (
     mode    => '0644',
     source  => "puppet:///modules/${module_name}/tdp-recruitment.service",
     require => Package['tdp-recruitment'],
-    notify  => Exec['Refresh system daemon'],
+    notify  => [Exec['Refresh system daemon'], Service['tdp-recruitment']]
   }
   service { 'tdp-recruitment':
     ensure  => running,
