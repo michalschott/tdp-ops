@@ -1,13 +1,14 @@
 class tdp_app (
-  $dbuser    = 'tdp',
-  $dbpass    = 'tdp',
-  $dbname    = 'tdprecruitment',
-  $dbhost    = 'localhost',
-  $port      = 8888,
-  $adminport = 8889,
-  $mailhost  = 'localhost',
-  $mailport  = 25,
-  $mailfrom  = 'no-reply@localhost',
+  $dbuser          = 'tdp',
+  $dbpass          = 'tdp',
+  $dbname          = 'tdprecruitment',
+  $dbhost          = 'localhost',
+  $port            = 8888,
+  $adminport       = 8889,
+  $mailhost        = 'localhost',
+  $mailport        = 25,
+  $mailfrom        = 'no-reply@localhost',
+  $sessionLifetime = 30,
   ) {
   package { 'java-1.8.0-openjdk':
     ensure => latest,
