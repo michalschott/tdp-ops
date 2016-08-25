@@ -47,4 +47,14 @@ smtpConfig:
   port: <%= @mailport %>
   from: <%= @mailfrom %>
 
+tokenCacheConfig:
+  maximumSize: 100
+  expireAfterAccess: <%= @sessionLifetime %>
+  expireAfterAccessTimeUnit: MINUTES
+
 domain: http://localhost:8888
+
+# Logging settings.
+logging:
+
+  level: INFO
