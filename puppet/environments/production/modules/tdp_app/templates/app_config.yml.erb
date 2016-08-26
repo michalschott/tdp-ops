@@ -47,4 +47,14 @@ smtpConfig:
   port: <%= @mailport %>
   from: <%= @mailfrom %>
 
-domain: http://localhost:8888
+tokenCacheConfig:
+  maximumSize: 100
+  expireAfterAccess: <%= @sessionLifetime %>
+  expireAfterAccessTimeUnit: MINUTES
+
+domain: http://recruitment-helper.kainos.com
+
+# Logging settings.
+logging:
+
+  level: INFO
