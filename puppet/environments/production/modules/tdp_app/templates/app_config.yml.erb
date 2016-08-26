@@ -47,6 +47,9 @@ smtpConfig:
   port: <%= @mailport %>
   from: <%= @mailfrom %>
 
+# used to limit threads used by mailing service
+threadPoolSize: 10
+
 tokenCacheConfig:
   maximumSize: 100
   expireAfterAccess: <%= @sessionLifetime %>
